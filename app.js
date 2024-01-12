@@ -1,32 +1,88 @@
-let num1 = 0;
-let num2 = 0;
+let num1 = '';
+let num2 = '';
 let operation = '';
+let displayValue = '';
 
-function add(num1, num2) {
-    return num1 + num2;
+function add(a, b) {
+    return a + b;
 }
 
-function subtract(num1, num2) {
-    return num2 - num1;
+function subtract(a, b) {
+    return a - b;
 }
 
-function multiply(num1, num2) {
-    return num1 * num2;
+function multiply(a, b) {
+    return a * b;
 }
 
-function divide(num1, num2) {
-    return num2 / num1;
+function divide(a, b) {
+    return a / b;
 }
 
-function operate(num1, num2, operation) {
-    if (operation == '+') {
-        return add(num1, num2);
-    } else if (operation == '-') {
-        return subtract(num1, num2)
-    } else if (operation == '*') {
-        return multiply(num1, num2)
-    } else if (operation == '/') {
-        return divide(num1, num2)
+function operate(operator, a, b) {
+    if (operator === '+') {
+        return add(a, b);
+    } else if (operator === '-') {
+        return subtract(a, b);
+    } else if (operator === '*') {
+        return multiply(a, b);
+    } else if (operator === '/') {
+        return divide(a, b);
+    }
+    return NaN;
+}
+
+function updateDisplay() {
+    const displayElement = document.getElementById('current');
+    displayElement.textContent = displayValue;
+}
+
+function appendToDisplay(number) {
+    displayValue += number;
+    updateDisplay();
+}
+
+function setOperator(operator) {
+    if (num1 === '') {
+        num1 = displayValue;
+        displayValue = '';
+        operation = operator;
     }
 }
-console.log(divide(2, 8));
+
+function calculate() {
+    if (num1 !== '' && operation !== '' && displayValue !== '') {
+        num2 = displayValue;
+        displayValue = operate(operation, parseFloat(num1), parseFloat(num2)).toString();
+        num1 = '';
+        num2 = '';
+        operation = '';
+        updateDisplay();
+    }
+}
+
+function clearDisplay() {
+    num1 = '';
+    num2 = '';
+    operation = '';
+    displayValue = '';
+    updateDisplay();
+}
+
+// Add event listeners to your buttons...
+
+document.querySelectorAll('.number').forEach(button => {
+    button.addEventListener('click', function() {
+        appendToDisplay(this.textContent);
+    });
+});
+
+document.querySelectorAll('.operator').forEach(button => {
+    button.addEventListener('click', function() {
+        setOperator(this.textContent);
+    });
+});
+
+document.querySelector('.equals').addEventListener('click', calculate);
+
+document.querySelector('.clear').addEventListener('click', clearDisplay);
